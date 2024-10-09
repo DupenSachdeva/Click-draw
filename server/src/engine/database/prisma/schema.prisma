@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  address   String   @unique
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  Worker    Worker   @relation(fields: [workerId], references: [id])
+  workerId  Int      @unique
+}
+
+enum TaskStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum TransactionStatus {
+  PROCESSING
+  REVOKED
+  SUCCESS
+}
+
+enum TransactionType {
+  WITHDRAW
+  DEPOSIT
+}
+
+model Task {
+  id            Int          @id @default(autoincrement())
+  title         String
+  description   String?
+  options       Option[]
+  user          User         @relation(fields: [userId], references: [id])
+  userId        Int
+  funds         Int          @db.Integer // Store amount funded to each task in lamports
+  responses     Int          @default(0)
+  responseLimit Int          @default(15)
+  submissions   Submission[]
+  status        TaskStatus   @default(ACTIVE)
+  signature     String
+  worker        Int          @default(15)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  endAt         DateTime?
+
+  @@unique([userId, id])
+}
+
+model Option {
+  id          String       @id @default(uuid())
+  serial_no   Int?         @default(0)
+  image_url   String
+  tasks       Task         @relation(fields: [taskId], references: [id])
+  taskId      Int
+  submissions Submission[]
+}
+
+model Worker {
+  id          Int          @id @default(autoincrement())
+  name        String?
+  address     String       @unique
+  submissions Submission[]
+  wallet      Wallet?
+  user        User?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  walletId    Int?
+  userId      Int?
+}
+
+model Submission {
+  id                        String       @id @default(uuid())
+  option                    Option       @relation(fields: [optionId], references: [id])
+  optionId                  String
+  Worker                    Worker       @relation(fields: [workerId], references: [id])
+  workerId                  Int
+  task                      Task         @relation(fields: [taskId], references: [id])
+  taskId                    Int
+  amount_credited_to_worker Int          @default(50000)
+  createdAt                 DateTime     @default(now())
+  transaction               Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId             String       @unique
+}
+
+model Wallet {
+  id       Int     @id @default(autoincrement())
+  worker   Worker? @relation(fields: [workerId], references: [id])
+  workerId Int     @unique
+
+  currentAmount Int           @default(0)
+  lockedAmount  Int           @default(0)
+  transactions  Transaction[]
+
+  @@unique([id, workerId])
+}
+
+model Transaction {
+  id          String  @id @default(uuid())
+  signature   String?
+  url         String?
+  description String?
+
+  amount   Int
+  Wallet   Wallet @relation(fields: [walletId], references: [id])
+  walletId Int
+
+  from String?
+  to   String?
+
+  status           TransactionStatus @default(PROCESSING)
+  transaction_type TransactionType
+  createdAt        DateTime          @default(now())
+
+  Submission   Submission?
+  post_balance Int
+}
