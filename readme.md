@@ -1,4 +1,6 @@
-[watch loom video - starting] (https://www.loom.com/share/b0e9fd49126649f2b04ffddb1b2d739c?sid=f52a1e8f-d8b5-4ff7-9af6-f4de608e0968)
+[watch loom video - starting](https://www.loom.com/share/b0e9fd49126649f2b04ffddb1b2d739c?sid=f52a1e8f-d8b5-4ff7-9af6-f4de608e0968)
+
+
 [watch loom video - working](https://www.loom.com/share/45d0f6ede94d4932afdee73a5a1f436c?sid=ae6778fd-e587-4507-942c-3fdca57dfacb)
 # Polling dApp using Solana, NestJS, ReactJS, and TypeScript
 
@@ -39,6 +41,15 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name/server
-   npm i
+   git clone https://github.com/DupenSachdeva/Click-draw.git
+   cd client 
+   pnpm i
+
+   cd worker-client
+   pnpm i
+
+2. configure env file variables:
+   
+   cd server
+   npm run db:migrate
+   npm run dev
