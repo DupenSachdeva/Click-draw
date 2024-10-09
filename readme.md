@@ -1,3 +1,5 @@
+[watch loom video - starting] (https://www.loom.com/share/b0e9fd49126649f2b04ffddb1b2d739c?sid=f52a1e8f-d8b5-4ff7-9af6-f4de608e0968)
+[watch loom video - working](https://www.loom.com/share/45d0f6ede94d4932afdee73a5a1f436c?sid=ae6778fd-e587-4507-942c-3fdca57dfacb)
 # Polling dApp using Solana, NestJS, ReactJS, and TypeScript
 
 This project is a decentralized polling application built using Solana blockchain for payments, NestJS for the backend, ReactJS with TypeScript for the frontend, and Amazon S3 for image storage. Users can create polls with images as options and pay Solana for the creation. Workers can vote on the polls and earn Solana for their participation.
