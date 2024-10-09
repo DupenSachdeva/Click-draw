@@ -27,7 +27,7 @@ export class TasksService {
     private s3Service: S3Service,
     private statsService: TaskStatisticsService,
   ) {}
-
+  
   async createTask(request: Request, files: Array<Express.Multer.File>) {
     try {
       const { user, body } = request;
@@ -39,29 +39,30 @@ export class TasksService {
 
       if (!data) throw new ConflictException();
 
-      // const uploads = await Promise.all(
-      //   files.map(async (file) => {
-      //     const { url, key } = await this.s3Service.generate_presigned_url({
-      //       userId: user.userId,
-      //     });
+      const uploads = await Promise.all(
+        files.map(async (file) => {
+          console.log(file);
+          
+          const { url, key } = await this.s3Service.generate_presigned_url({
+            userId: user.userId,
+          });
 
-      //     await axios.put(url, file.buffer, {
-      //       headers: {
-      //         'Content-Type': file.mimetype,
-      //       },
-      //     });
+          await axios.put(url, file.buffer, {
+            headers: {
+              'Content-Type': file.mimetype
+            },
+          });
 
-      //     const uploadedUrl = this.cfService.get_cf_image_url({
-      //       imageKey: key,
-      //     });
+          const uploadedUrl = this.cfService.get_cf_image_url({
+            imageKey: key,
+          });
 
-      //     return {
-      //       image_url: uploadedUrl,
-      //     };
-      //   }),
-      // );
+          return {
+            image_url: uploadedUrl,
+          };
+        }),
+      );
 
-      //wallet trransact
 
       const wallet_tx = await this.databaseService.$transaction(async (tx) => {
         const address = user.publicKey;
@@ -173,11 +174,11 @@ export class TasksService {
           endAt: this.addDaysToDate(data.endAt || new Date(), 5),
         },
       });
-      files.forEach(async (u, index) => {
+      uploads.forEach(async (u, index) => {
         await this.databaseService.option.create({
           data: {
             taskId: task.id,
-            image_url:"https://plus.unsplash.com/premium_photo-1694819488591-a43907d1c5cc?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y3V0ZSUyMGRvZ3xlbnwwfHwwfHx8MA%3D%3D",
+            image_url:u.image_url,
             serial_no: index + 1,
           },
         });

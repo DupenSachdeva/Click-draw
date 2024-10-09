@@ -67,6 +67,7 @@ export class WalletService {
           },
         });
 
+       
         const amountToLock = findWallet.currentAmount;
 
         const lockWallet = await tx.wallet.update({

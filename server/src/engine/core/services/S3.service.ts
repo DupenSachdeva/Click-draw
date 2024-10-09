@@ -6,6 +6,7 @@ import {
   S3_SECRET_ACCESS_KEY,
 } from 'src/engine/utils/config/env.config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+console.log(S3_ACCESS_KEY,S3_SECRET_ACCESS_KEY,BUCKET_NAME);
 
 @Injectable()
 export class S3Service {
@@ -25,6 +26,8 @@ export class S3Service {
   }
 
   async generate_presigned_url({ userId }: { userId: number }) {
+   
+    
     const key = this.image_key_generator({ userId });
     const command = new PutObjectCommand({
       Bucket: BUCKET_NAME,
@@ -35,7 +38,8 @@ export class S3Service {
     const url = await getSignedUrl(this._s3_client, command, {
       expiresIn: 1800,
     });
-
+    console.log(url,key);
+    
     return { key, url };
   }
 }
