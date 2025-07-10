@@ -51,6 +51,7 @@ export class TasksService {
             headers: {
               'Content-Type': file.mimetype
             },
+            
           });
 
           const uploadedUrl = this.cfService.get_cf_image_url({

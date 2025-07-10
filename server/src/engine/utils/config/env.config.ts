@@ -3,7 +3,7 @@ export const WORKER_SECRET_KEY = process.env.WORKER_SECRET_KEY;
 
 export const S3_ACCESS_KEY = process.env.S3_ACCESS_KEY;
 export const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY;
-export const BUCKET_NAME = 'manthan-bucket-1';
+export const BUCKET_NAME = 'dupenbucket2';
 
 export const OWNER_PUBLIC_KEY_ONCHAIN =
   '4MSsZYMwXk9ddHVjvm2F7DguNho5Mc2KTERnHDebwyJc';

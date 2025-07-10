@@ -81,7 +81,7 @@ const CreateTask = () => {
             token: window.localStorage.getItem("token")!,
           })
         )?.Worker.wallet!;
-
+         
         lamports = taskInput.funds - wallet.currentAmount;
       }
 
